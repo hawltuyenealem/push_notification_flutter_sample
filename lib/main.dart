@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:push_notification/green_page.dart';
+import 'package:push_notification/services/local_notification_service.dart';
 
   Future<void> backGroundHandler (RemoteMessage remoteMessage)async{
     print(remoteMessage.data.toString());
@@ -12,6 +13,7 @@ import 'package:push_notification/green_page.dart';
   }
   void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //LocalNotificationService.initialize();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backGroundHandler);
   runApp(App());
@@ -35,6 +37,7 @@ class _HomePageState extends State<HomePage>{
   void initState() {
     // TODO: implement initState
     super.initState();
+    LocalNotificationService.initialize(context);
 
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if(message != null){
@@ -49,7 +52,7 @@ class _HomePageState extends State<HomePage>{
       if(message != null){
         print(message.notification?.body);
       }
-
+      LocalNotificationService.display(message);
     });
 
     //When the app is in the background but opens when user taps
